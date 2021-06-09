@@ -1,6 +1,7 @@
 import csv
 import logging
 from typing import Optional
+from functools import reduce
 
 logging.basicConfig(level=logging.INFO)
 #logging.basicConfig(level=logging.DEBUG)
@@ -33,10 +34,7 @@ class Cluster:
 
     def get_idx(self, cards: ACs):
         """Returns the index at which the value for the combination is"""
-        pos = 0
-        for i in cards:
-            pos = flip(pos, self.cards.index(i))
-        return pos
+        return reduce(flip, map(self.cards.index, cards), 0)
 
 def read_from_file(file_name : str):
     clusters : list[Cluster] = []
