@@ -1,5 +1,6 @@
 import csv
 import logging
+from typing import Optional
 
 logging.basicConfig(level=logging.INFO)
 #logging.basicConfig(level=logging.DEBUG)
@@ -12,17 +13,14 @@ def flip(n: int, pos: int):
     return n ^ (1 << pos)
 
 class Cluster:
-    def __init__(self, cards: ACs, factors: list[float] = []):
+    def __init__(self, cards: ACs, factors: Optional[list[float]] = None):
         """
         If no `factors` are passed, then a list of 0s of size `2 ** cards` is created.
         """
-        self.cards : ACs = cards
-        self.factors : list = factors
-        self.played : int = 0
-        if len(self.factors) == 0:
-            self.factors = [0] * (2**len(cards))
-        if len(self.factors) > 0:
-            self.factor = self.factors[0]
+        self.cards = cards
+        self.played = 0
+        self.factors = factors or [0] * (2**len(cards))
+        self.factor = self.factors[0]
         assert len(self.factors) == 2 ** len(cards)
 
     def play(self, card: str):
@@ -35,7 +33,7 @@ class Cluster:
 
     def get_idx(self, cards: ACs):
         """Returns the index at which the value for the combination is"""
-        pos : int = 0
+        pos = 0
         for i in cards:
             pos = flip(pos, self.cards.index(i))
         return pos
@@ -46,11 +44,10 @@ def read_from_file(file_name : str):
         r = csv.reader(f)
         for row in r:
             if row[0] == "Cluster":
-                logging.info('\n###\tCluster: {}\n\tAffects: {}\n\tCards: {}'
-                        .format(row[1], row[2], row[4:]))
+                logging.info(f'\n###\tCluster: {row[1]}\n\tAffects: {row[2]}\n\tCards: {row[4:]}')
                 clusters.append(Cluster(row[4:]))
             else:
-                clusters[-1].factors[clusters[-1].get_idx(row[:-1])] = row[-1]
+                clusters[-1].factors[clusters[-1].get_idx(row[:-1])] = float(row[-1])
     return clusters
 
 if __name__ == "__main__":
