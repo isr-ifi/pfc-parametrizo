@@ -1,12 +1,10 @@
 import csv
 import logging
-from typing import Optional
 from functools import reduce
+from typing import Optional
 
-logging.basicConfig(level=logging.INFO)
-#logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.WARNING)
 
-DEBUG = True
 ACs = list[str]
 
 def flip(n: int, pos: int):
