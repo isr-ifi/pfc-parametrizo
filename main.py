@@ -12,13 +12,18 @@ def flip(n: int, pos: int):
     return n ^ (1 << pos)
 
 class Cluster:
-    def __init__(self, cards: ACs, factors: Optional[list[float]] = None):
+    def __init__(self, name: str, mfa_var: str, effect: str, cards: ACs,
+            factors: Optional[list[float]] = None):
         """
-        If no `factors` are passed, then a list of 0s of size `2 ** cards` is created.
+        If no `factors` are passed it defaults to a list of 1s of size `2 ** cards`
         """
+        self.name = name
+        self.mfa_var = mfa_var
+        self.effect = effect # either mul or sum
+        n_effect = 1 if effect == 'mul' else 0
         self.cards = cards
         self.played = 0
-        self.factors = factors or [0] * (2**len(cards))
+        self.factors = factors or [n_effect] * (2**len(cards))
         self.factor = self.factors[0]
         assert len(self.factors) == 2 ** len(cards)
 
@@ -40,15 +45,15 @@ def read_from_file(file_name : str):
         r = csv.reader(f)
         for row in r:
             if row[0] == "Cluster":
-                logging.info(f'\n###\tCluster: {row[1]}\n\tAffects: {row[2]}\n\tCards: {row[4:]}')
-                clusters.append(Cluster(row[4:]))
+                logging.debug(f'\n###\tCluster: {row[1]}\n\tAffects: {row[2]}\n\tCards: {row[4:]}')
+                clusters.append(Cluster(row[1], row[2], row[3], row[4:]))
             else:
                 clusters[-1].factors[clusters[-1].get_idx(row[:-1])] = float(row[-1])
     return clusters
 
 if __name__ == "__main__":
-    c: Cluster = Cluster(["c1", "c2", "c3", "c4"],
-            [x for x in range(16)])
+    c: Cluster = Cluster('Test', 'a.b', 'mul', ["c1", "c2", "c3", "c4"],
+           [x for x in range(16)])
     assert c.factor == 0
     c.play("c1")
     assert c.played == 1
@@ -69,3 +74,5 @@ if __name__ == "__main__":
     logging.debug(clusters[0].factors)
     logging.debug(clusters[1].cards)
     logging.debug(clusters[1].factors)
+    logging.debug(clusters[2].factors)
+    logging.debug(clusters[3].factors)

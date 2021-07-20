@@ -1,4 +1,4 @@
-Cluster,C1,priv_veh,mul,c1,c2,c3,c4
+Cluster,C6,priv_veh,mul,c1,c2,c3,c4
 c1,0.88
 c1,c2,0.95
 c3,0.8
@@ -14,7 +14,7 @@ c4,c3,0.8
 c4,c3,c1,0.95
 c4,c3,c2,0.94
 c4,c3,c2,c1,0.93
-Cluster,C2,pub_veh,mul,c5,c6,c7,c8
+Cluster,C32,pub_veh,mul,c5,c6,c7,c8
 c5,0.8
 c6,0.9
 c6,c5,0.8
@@ -30,3 +30,5 @@ c8,c7,0.9
 c8,c7,c5,0.8
 c8,c7,c6,0.9
 c8,c7,c6,c5,0.8
+Cluster,C35,pub_veh,sum,c5,c6,c7,c8
+Cluster,C60,pub_veh,mul,c5,c6,c7,c8
